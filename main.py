@@ -1,45 +1,44 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
-from kivy.uix.video import Video
+from kivymd.toast import toast
 
 KV = '''
 MDScreen:
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
 
-        MDLabel:
-            text: "KivyMD Video Player"
-            halign: "center"
-            font_style: "H5"
-            theme_text_color: "Custom"
-            text_color: 0, 0, 0, 1
-
-        Video:
+        VideoPlayer:
             id: video_player
             source: "assets/v1.mp4"
             state: "play"
-            options: {'eos': 'loop'}
+            options: {"eos": "loop"}
             allow_stretch: True
-            keep_ratio: True
-            size_hint_y: 0.8
+            size_hint_y: 0.9
 
         MDRaisedButton:
-            text: "Play / Pause"
+            text: "Play/Pause"
             pos_hint: {"center_x": 0.5}
             on_release: app.toggle_video()
 '''
 
 class MainApp(MDApp):
     def build(self):
-        return Builder.load_string(KV)
+        try:
+            return Builder.load_string(KV)
+        except Exception as e:
+            toast(f"Load error: {e}")
+            return Builder.load_string('''
+MDScreen:
+    MDLabel:
+        text: "Video load failed."
+        halign: "center"
+''')
 
     def toggle_video(self):
-        player = self.root.ids.video_player
-        if player.state == 'play':
-            player.state = 'pause'
-        else:
-            player.state = 'play'
+        try:
+            player = self.root.ids.video_player
+            player.state = "pause" if player.state == "play" else "play"
+        except Exception as e:
+            toast(f"Toggle error: {e}")
 
 MainApp().run()
