@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = FF_INFO[OFFICIAL]
+title = vid
 
 # (str) Package name
-package.name = mahakal_baba_464994964646465
+package.name = mahakal_baba_96495946492727191846
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.jai__jai_mahakal_bholenath_baba_461313644664646
+package.domain = com.jai__jai_mahakal_bholenath_baba_85454546646465
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -44,10 +44,10 @@ requirements = python3,kivy,kivymd,requests,android,pyjnius,ffpyplayer
 # requirements.source.kivy = ../../kivy
 
 # (str) Presplash of the application
-presplash.filename = %(source.dir)s/assets/ff1.png
+#presplash.filename = %(source.dir)s/assets/ff1.png
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/assets/fficon.png
+#icon.filename = %(source.dir)s/assets/fficon.png
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse or landscape-reverse
