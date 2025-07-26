@@ -44,10 +44,10 @@ requirements = python3,kivy,kivymd,requests,android,pyjnius,ffpyplayer,plyer
 # requirements.source.kivy = ../../kivy
 
 # (str) Presplash of the application
-presplash.filename = %(source.dir)s/assets/a2.png
+#presplash.filename = %(source.dir)s/assets/a2.png
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/assets/a1.png
+#icon.filename = %(source.dir)s/assets/a1.png
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse or landscape-reverse
