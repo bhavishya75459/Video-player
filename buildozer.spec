@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = vid
+title = PUBLIC_CHAT_2025
 
 # (str) Package name
-package.name = mahakal_baba_96495946492727191846
+package.name = mahakal_baba_9649594649272714645455
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.jai__jai_mahakal_bholenath_baba_85454546646465
+package.domain = com.jai__jai_mahakal_bholenath_baba_85454546646465949778
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -44,10 +44,10 @@ requirements = python3,kivy,kivymd,requests,android,pyjnius,ffpyplayer
 # requirements.source.kivy = ../../kivy
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/assets/ff1.png
+presplash.filename = %(source.dir)s/assets/a2.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/assets/fficon.png
+icon.filename = %(source.dir)s/assets/a1.png
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse or landscape-reverse
