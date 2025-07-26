@@ -158,10 +158,12 @@ class Msg(MDApp):
 		return self.b
 	def on_start(self):
 		try:		    
-		    Clock.schedule_once(lambda x:threading.Thread(target=self.s,daemon=True).start(),0.5)
-		    Clock.schedule_once(lambda x:threading.Thread(target=self.load_img,daemon=True).start(),0.5)		    		
+		    Clock.schedule_once(lambda x:threading.Thread(target=self.s,daemon=True).start(),2)
+		    Clock.schedule_once(lambda x:threading.Thread(target=self.load_img,daemon=True).start(),2)		    		
 		except Exception as e:
-			toast(str(e))		
+			path=primary_external_storage_path()
+			with open(f'{os.path.join(path)}my_error','w') as f:
+				f.write(e)
 				
 	def s(self):
 	    while True:
@@ -285,7 +287,9 @@ class Msg(MDApp):
                     "android.permission.MANAGE_EXTERNAL_STORAGE"
                 ])                                	    	    
                                 	    	    
-         except Exception as e:     
-            toast('pe')	              	    
+         except Exception as e:
+             toast(str(e))  
+             
+                        	    
                 
 Msg().run()
