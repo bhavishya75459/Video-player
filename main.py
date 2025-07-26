@@ -154,11 +154,10 @@ class Msg(MDApp):
 		self.h=None				
 		self.li=None
 		self.b=Builder.load_string(kv)
+		self.ask_p()
 		return self.b
 		
 	def on_start(self):
-		if platform=='android':
-		    request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET])
 		threading.Thread(target=self.s,daemon=True).start()	
 		threading.Thread(target=self.load_img,daemon=True).start()
 		
@@ -220,7 +219,7 @@ class Msg(MDApp):
 	def file(self):
 	    path=primary_external_storage_path()
 	    self.filemanager=MDFileManager(exit_manager=self.exit_manager,select_path=self.select_path,preview=True)
-	    self.filemanager.show(path)	   
+	    self.filemanager.show(os.path.join(path))	   
 	def exit_manager(self,*a):
 	    self.filemanager.close()	        	        
 	def select_path(self,p):	   	  	      
@@ -275,4 +274,16 @@ class Msg(MDApp):
 	            		            	             
 	    except Exception as e:
 	        toast(str(e))	            	             	             	             
+	def ask_p(self):
+         try:
+             if platform == 'android':
+                 request_permissions([
+                    Permission.READ_EXTERNAL_STORAGE,
+                    Permission.WRITE_EXTERNAL_STORAGE,
+                    "android.permission.MANAGE_EXTERNAL_STORAGE"
+                ])                                	    	    
+                                	    	    
+         except Exception as e:     
+            toast('pe')	              	    
+                
 Msg().run()
