@@ -148,7 +148,6 @@ class Sec(Screen):
 	
 class Msg(MDApp):
 	def build(self):
-		request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.MANAGE_EXTERNAL_STORAGE])
 		self.cu=f'https://myfirstapp-449eb-default-rtdb.firebaseio.com/msg.json'
 		self.au='aUzUfyYhwIuPeWuSwwPo1IyhK0rBJt9ickXHxkV8'
 		self.tu=f'{self.cu}?auth={self.au}'		
@@ -158,6 +157,8 @@ class Msg(MDApp):
 		return self.b
 		
 	def on_start(self):
+		if platform=='android':
+		    request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET])
 		threading.Thread(target=self.s,daemon=True).start()	
 		threading.Thread(target=self.load_img,daemon=True).start()
 		
