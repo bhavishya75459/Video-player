@@ -156,11 +156,13 @@ class Msg(MDApp):
 		self.b=Builder.load_string(kv)
 		self.ask_p()
 		return self.b
-		
 	def on_start(self):
-		threading.Thread(target=self.s,daemon=True).start()	
-		threading.Thread(target=self.load_img,daemon=True).start()
-		
+		try:		    
+		    Clock.schedule_once(lambda x:threading.Thread(target=self.s,daemon=True).start(),0.5)
+		    Clock.schedule_once(lambda x:threading.Thread(target=self.load_img,daemon=True).start(),0.5)		    		
+		except Exception as e:
+			toast(str(e))		
+				
 	def s(self):
 	    while True:
 	        try:
