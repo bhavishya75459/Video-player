@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = PUBLIC_CHAT_2025
+title = video_player
 
 # (str) Package name
-package.name = mahakal_baba_9649594649272714645455
+package.name = videoplayer
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.jai__jai_mahakal_bholenath_baba_85454546646465949778
+package.domain = org.test
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -101,13 +101,13 @@ android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-android.api = 31
+android.api = 33
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 21
 
 # (int) Android SDK version to use
-android.sdk = 20
+android.sdk = 33
 
 # (str) Android NDK version to use
 android.ndk = 25b
