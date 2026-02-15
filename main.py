@@ -1,28 +1,34 @@
-from kivymd.app import MDApp
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.video import Video
+from kivy.uix.button import Button
 
-KV = '''
-ScreenManager:
-    HomeScreen:
 
-<HomeScreen>:
-    name: "home"
+class VideoPlayerApp(App):
 
-    MDLabel:
-        text: "JAI MAHAKAL"
-        halign: "center"
-        theme_text_color: "Custom"
-        text_color: 1, 0, 0, 1  # Laal color
-        font_style: "H4"
-        pos_hint: {"center_y": 0.5}
-'''
-
-class HomeScreen(Screen):
-    pass
-
-class MainApp(MDApp):
     def build(self):
-        return Builder.load_string(KV)
 
-MainApp().run()
+        root = BoxLayout(orientation="vertical")
+
+        # Video widget
+        self.video = Video(
+            source="assets/v1.mp4",
+            state="stop",
+            options={"eos": "loop"},
+            allow_stretch=True
+        )
+
+        # Play button
+        play_btn = Button(text="Play Video", size_hint=(1, 0.1))
+        play_btn.bind(on_press=self.play_video)
+
+        root.add_widget(self.video)
+        root.add_widget(play_btn)
+
+        return root
+
+    def play_video(self, instance):
+        self.video.state = "play"
+
+
+VideoPlayerApp().run()
