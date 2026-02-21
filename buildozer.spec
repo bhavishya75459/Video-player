@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = video_player
+title = Appg
 
 # (str) Package name
-package.name = videoplayer
+package.name = App
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.test
@@ -101,13 +101,13 @@ android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-android.api = 33
+android.api = 31
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 21
 
 # (int) Android SDK version to use
-android.sdk = 33
+android.sdk = 20
 
 # (str) Android NDK version to use
 android.ndk = 25b
