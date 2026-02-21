@@ -82,8 +82,14 @@ class Sec(Screen):
 class Demo(MDApp):
     def build(self):        
         self.b=Builder.load_string(kv)
-        self.ask_p()
         return self.b
+
+    def on_start(self):
+        try:
+            request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
+        except Exception as e:
+            toast(str(e))
+
 
     def database(self):
         try:
@@ -124,20 +130,9 @@ class Demo(MDApp):
         except Exception as e:
             Clock.schedule_once(lambda x:toast('PROBLEM'))
             
-    def ask_p(self):
-         try:
-             if platform == 'android':
-                 request_permissions([
-                    Permission.READ_EXTERNAL_STORAGE,
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                    "android.permission.MANAGE_EXTERNAL_STORAGE"
-                ])                                	    	    
-                                	    	    
-         except Exception as e:
-             toast(str(e))  
+
              
                               
                                                       
 
 Demo().run()
-        
