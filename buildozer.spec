@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Appg
+title = Free_Recharge_yojna
 
 # (str) Package name
 package.name = App
