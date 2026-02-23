@@ -139,8 +139,9 @@ class ImgCard(MDBoxLayout):
         except Exception as e:
             toast(str(e))                                                  
     def down(self,va):
-        try:               
-             dow_path=f'{primary_external_storage_path()}/y_t'
+        try:
+             path=primary_external_storage_path()               
+             dow_path=f'{path}/Download/y_t'
              os.makedirs(dow_path,exist_ok=True)
              response=requests.get(va)
              if response.status_code==200:
