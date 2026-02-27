@@ -1,10 +1,10 @@
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.utils import platform
-from jnius import autoclass
-from android.runnable import run_on_ui_thread
-from kivymd.toast import toast as t
 from kivy.core.clipboard import Clipboard
+
+# Toast ke liye direct KivyMD toast use kar rahe hain
+from kivymd.toast import toast as t
 
 KV = '''
 MDScreen:
@@ -22,55 +22,56 @@ MDScreen:
         pos_hint: {"center_y": 0.5}
 '''
 
-# Android AdMob Setup
 if platform == "android":
-    try:
-         AdMobAdapter = autoclass("com.google.ads.mediation.admob.AdMobAdapter")
-         AdSize = autoclass('com.google.android.gms.ads.AdSize')
-         AdRequestBuilder = autoclass('com.google.android.gms.ads.AdRequest$Builder')
-         MobileAds = autoclass('com.google.android.gms.ads.MobileAds')
-         PythonActivity = autoclass('org.kivy.android.PythonActivity')
-         FrameLayoutParams = autoclass('android.widget.FrameLayout$LayoutParams')        
-    
-        
-    except Exception as e:
-        t(f'p:-{e}')
-        Clipboard.copy(str(e))
+    from jnius import autoclass
+    from android.runnable import run_on_ui_thread
 
-    @run_on_ui_thread
-    def toasts(a,*args):
-        PythonActivity = autoclass('org.kivy.android.PythonActivity')
-        toast=autoclass('android.widget.Toast')
-        string=autoclass('java.lang.String')        
-        c=PythonActivity.mActivity
-        s=string(str(a))
-        toast.makeText(c,s,toast.LENGTH_SHORT).show()
+    # Zaroori Classes ko load karna (Path check karein)
+    AdView = autoclass('com.google.android.gms.ads.AdView')
+    AdSize = autoclass('com.google.android.gms.ads.AdSize')
+    AdRequest = autoclass('com.google.android.gms.ads.AdRequest')
+    AdRequestBuilder = autoclass('com.google.android.gms.ads.AdRequest$Builder')
+    MobileAds = autoclass('com.google.android.gms.ads.MobileAds')
+    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    Gravity = autoclass('android.view.Gravity')
+    LayoutParams = autoclass('android.widget.FrameLayout$LayoutParams')
 
     @run_on_ui_thread
     def show_banner():
-        try:            
+        try:
             activity = PythonActivity.mActivity
+            
+            # Mobile Ads Initialize
             MobileAds.initialize(activity)
-    
-            adview = AdView(activity)
-            adview.setAdSize(AdSize.BANNER)
-    
-            # ✅ Test Banner Ad Unit ID
-            adview.setAdUnitId("ca-app-pub-7264801834502563/6725695296")
-    
-            adRequest = AdRequestBuilder().build()
-            adview.loadAd(adRequest)
-    
-            params = FrameLayoutParams(
-                FrameLayoutParams.MATCH_PARENT,
-                FrameLayoutParams.WRAP_CONTENT
+            
+            # AdView Object banana
+            ad_view = AdView(activity)
+            ad_view.setAdSize(AdSize.BANNER)
+            
+            # ✅ Test Banner ID (Aapka ID bhi replace kar sakte hain)
+            ad_view.setAdUnitId("ca-app-pub-3940256099942544/6300978111")
+            
+            # Ad Request Build karna
+            builder = AdRequestBuilder()
+            request = builder.build()
+            
+            # Ad Load karna
+            ad_view.loadAd(request)
+            
+            # Layout set karna (Ad ko screen ke bottom mein rakhne ke liye)
+            params = LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
             )
-    
-            activity.addContentView(adview, params)
-
+            params.gravity = Gravity.BOTTOM
+            
+            # Activity mein ad add karna
+            activity.addContentView(ad_view, params)
+            
         except Exception as e:
-            toasts(str(e))
+            print(f"AdMob Error: {str(e)}")
             Clipboard.copy(str(e))
+
 class AdApp(MDApp):
     def build(self):
         return Builder.load_string(KV)
@@ -79,5 +80,6 @@ class AdApp(MDApp):
         if platform == "android":
             show_banner()
 
-
-AdApp().run()
+if __name__ == "__main__":
+    AdApp().run()
+    
