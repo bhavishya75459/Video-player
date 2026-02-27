@@ -101,13 +101,13 @@ android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-android.api = 31
+android.api = 33
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 21
 
 # (int) Android SDK version to use
-android.sdk = 20
+android.sdk = 33
 
 # (str) Android NDK version to use
 android.ndk = 25b
@@ -140,7 +140,14 @@ android.accept_sdk_license = True
 
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.kivy.android.PythonActivity
+# Meta-data for AdMob (Test ID)
+android.meta_data = com.google.android.gms.ads.APPLICATION_ID=ca-app-pub-3940256099942544~3347511713
 
+# Dependencies
+android.gradle_dependencies = "com.google.android.gms:play-services-ads:22.4.0", "androidx.appcompat:appcompat:1.6.1", "androidx.core:core:1.9.0"
+
+android.enable_androidx = True
+android.add_compile_options = "sourceCompatibility = 1.8", "targetCompatibility = 1.8"
 # (str) Full name including package path of the Java class that implements Android Activity
 # use that parameter together with android.entrypoint to set custom Java class instead of PythonActivity
 #android.activity_class_name = org.kivy.android.PythonActivity
