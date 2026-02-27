@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Image_Downloader
+title = add_shower
 
 # (str) Package name
-package.name = App_by_bhavishya
+package.name = App_in_har
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test_bhavishya
+package.domain = org.test_jatim
 
 # (str) Source code where the main.py live
 source.dir = .
